@@ -1,0 +1,274 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #311042 100%);
+    color: #ffffff;
+}
+
+/* Dedicated Login Page Styling */
+.login-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    background: linear-gradient(135deg, #1e1b4b, #311042);
+    padding: 40px 35px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-card h2 {
+    font-size: 28px;
+    background: linear-gradient(90deg, #00dfd8, #c77dff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 5px;
+}
+
+.login-subtitle {
+    color: #cbd5e1;
+    font-size: 13px;
+    margin-bottom: 25px;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 13px;
+    color: #cbd5e1;
+    margin-bottom: 6px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #00dfd8;
+    box-shadow: 0 0 10px rgba(0, 223, 216, 0.3);
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(45deg, #00dfd8, #7928ca);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 223, 216, 0.5);
+}
+
+/* Navigation Bar */
+header {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 8%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    background: linear-gradient(45deg, #ff007f, #7928ca, #00dfd8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+nav ul li a {
+    color: #e2e8f0;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+nav ul li a:hover {
+    color: #00dfd8;
+}
+
+.cv-btn {
+    background: linear-gradient(45deg, #ff007f, #7928ca);
+    padding: 8px 20px;
+    border-radius: 25px;
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+.logout-btn {
+    border: 1px solid #ff007f;
+    padding: 6px 16px;
+    border-radius: 20px;
+    color: #ff007f !important;
+}
+
+.logout-btn:hover {
+    background: #ff007f;
+    color: #fff !important;
+}
+
+/* Home Section */
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 60px;
+    padding: 20px;
+}
+
+.badge {
+    background: rgba(0, 223, 216, 0.15);
+    color: #00dfd8;
+    border: 1px solid rgba(0, 223, 216, 0.3);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.content h1 {
+    font-size: 46px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #00dfd8, #c77dff, #ff007f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 15px;
+}
+
+.description {
+    max-width: 650px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 20px 25px;
+    border-radius: 15px;
+    border-left: 4px solid #ff007f;
+}
+
+.cta-buttons {
+    margin-top: 25px;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #00dfd8, #7928ca);
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* CV Page Styling */
+.cv-container {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ff007f;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+}
+
+.profile-img {
+    width: 120px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid #00dfd8;
+}
+
+.cv-section {
+    margin-bottom: 25px;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 4px solid #00dfd8;
+}
+
+.cv-section h2 {
+    color: #00dfd8;
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.edu-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.edu-table th, .edu-table td {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    text-align: left;
+}
+
+.edu-table th {
+    background: rgba(0, 223, 216, 0.15);
+    color: #00dfd8;
+}
+
+.project-list {
+    padding-left: 20px;
+    color: #cbd5e1;
+}
+
+.project-list li {
+    margin-bottom: 12px;
+}

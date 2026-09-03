@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RRIMT - Smart QR Attendance System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --bg-body: #f4f6f9;
+            --sidebar-bg: #1a365d;
+            --card-bg: #ffffff;
+            --primary: #007bff;
+            --success: #28a745;
+            --danger: #dc3545;
+            --text-dark: #2d3748;
+            --text-muted: #718096;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* Navigation Bar */
+        .navbar {
+            background: var(--sidebar-bg);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand h2 { font-size: 18px; letter-spacing: 0.5px; }
+        .navbar-brand span { font-size: 11px; color: #a0aec0; display: block; }
+
+        .nav-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .nav-btn-danger { background: var(--danger); }
+
+        /* Layout Container */
+        .container { padding: 30px; max-width: 1200px; margin: 0 auto; width: 100%; }
+
+        /* Section Visibility Toggle */
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+
+        /* Student View Styling */
+        .student-layout {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            width: 360px;
+            border: 1px solid var(--border);
+        }
+
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; font-size: 12px; font-weight: 600; color: #4a5568; margin-bottom: 5px; text-transform: uppercase; }
+        input, select { width: 100%; padding: 10px; border: 1.5px solid #cbd5e0; border-radius: 8px; font-size: 14px; }
+
+        /* Badge Styling */
+        .badge-card {
+            background: #fff;
+            width: 320px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .badge-header { background: var(--sidebar-bg); color: white; padding: 15px; }
+        .badge-body { padding: 20px; }
+        #qrcode { margin: 15px auto; display: flex; justify-content: center; }
+
+        /* Admin Dashboard Styling */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .metric-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .metric-icon { width: 45px; height: 45px; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 18px; }
+
+        /* Table Styling */
+        .table-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
+        .table-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        th, td { padding: 12px 20px; border-bottom: 1px solid var(--border); }
+        th { background: #f8fafc; color: var(--text-muted); }
+
+        /* Login Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 300px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <h2>RR Institute of Modern Technology</h2>
+            <span>BKT, Lucknow • Attendance Portal</span>
+        </div>
+        <div id="navActions">
+            <button class="nav-btn" id="loginBtn" onclick="openLoginModal()"><i class="fa-solid fa-lock"></i> Admin Login</button>
+            <button class="nav-btn nav-btn-danger" id="logoutBtn" style="display:none;" onclick="logoutAdmin()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- 1. STUDENT VIEW (ONLY GENERATE QR) -->
+        <section id="studentView" class="view-section active">
+            <h2 style="text-align: center; margin-bottom: 25px;">Student QR Badge Generator</h2>
+            <div class="student-layout">
+                <div class="card">
+                    <div class="input-group">
+                        <label for="name">Student Full Name</label>
+                        <input type="text" id="name" placeholder="e.g. Rahul Sharma">
+                    </div>
+                    <div class="input-group">
+                        <label for="roll">Roll Number</label>
+                        <input type="text" id="roll" placeholder="e.g. 2103560100001">
+                    </div>
+                    <div class="input-group">
+                        <label for="course">Course Program</label>
+                        <select id="course">
+                            <option value="B.Tech">B.Tech</option>
+                            <option value="Diploma">Diploma (Polytechnic)</option>
+                            <option value="MBA">MBA</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="branch">Department / Branch</label>
+                        <select id="branch">
+                            <option value="CSE">CSE (Computer Science)</option>
+                            <option value="CS (SE)">CS (Software Engineering)</option>
+                            <option value="Applied Sciences">Applied Sciences</option>
+                            <option value="ECE">ECE (Electronics)</option>
+                            <option value="ME">ME (Mechanical)</option>
+                            <option value="CE">CE (Civil)</option>
+                            <option value="HR & Finance">HR & Finance (MBA)</option>
+                        </select>
+                    </div>
+                    <button class="nav-btn" style="width: 100%;" onclick="generateQR()">Generate My QR Code</button>
+                </div>
+
+                <div class="badge-card">
+                    <div class="badge-header">
+                        <h4 style="font-size: 13px;">RRIMT STUDENT BADGE</h4>
+                    </div>
+                    <div class="badge-body">
+                        <div id="qrcode"><p style="font-size: 12px; color: #a0aec0; margin: 30px 0;">Fill form to show QR</p></div>
+                        <h3 id="disp-name" style="font-size: 16px;">----------</h3>
+                        <p id="disp-roll" style="font-size: 12px; color: var(--text-muted);">Roll: ----------</p>
+                        <p id="disp-dept" style="font-size: 12px; font-weight: 600; color: var(--primary); margin-top: 4px;">----------</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. ADMIN DASHBOARD & SCANNER (RESTRICTED ACCESS) -->
+        <section id="adminView" class="view-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>Admin Control Panel & Scanner</h2>
+                <button class="nav-btn" style="background: var(--success);" onclick="alert('Opening OpenCV Python WebCam Engine...')">
+                    <i class="fa-solid fa-camera"></i> Launch Live Scanner
+                </button>
+            </div>
+
+            <!-- Metrics -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: #ebf8ff; color: #3182ce;"><i class="fa-solid fa-users"></i></div>
+                    <div><h3>42</h3><p style="font-size: 12px; color: var(--text-muted);">Total Scanned Today</p></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: #e6fffa; color: #319795;"><i class="fa-solid fa-database"></i></div>
+                    <div><h3>In-Memory</h3><p style="font-size: 12px; color: var(--text-muted);">Database-Free Storage</p></div>
+                </div>
+            </div>
+
+            <!-- Master Attendance Table -->
+            <div class="table-card">
+                <div class="table-header">
+                    <h4>Today's Attendance Logs</h4>
+                    <button class="nav-btn" style="font-size: 12px;"><i class="fa-solid fa-download"></i> Export CSV Report</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Roll Number</th>
+                            <th>Student Name</th>
+                            <th>Course & Branch</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2103560100001</td>
+                            <td>Rahul Sharma</td>
+                            <td>B.Tech - CS (SE)</td>
+                            <td>2026-08-31</td>
+                            <td>09:05:12</td>
+                            <td><span style="color: var(--success); font-weight: bold;">Marked</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- ADMIN LOGIN MODAL -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 15px;">Admin Authentication</h3>
+            <div class="input-group">
+                <input type="text" id="adminUser" placeholder="Username (admin)">
+            </div>
+            <div class="input-group">
+                <input type="password" id="adminPass" placeholder="Password (admin125)">
+            </div>
+            <button class="nav-btn" style="width: 100%; margin-bottom: 10px;" onclick="authenticateAdmin()">Login</button>
+            <button class="nav-btn nav-btn-danger" style="width: 100%;" onclick="closeLoginModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // Generate QR Code for Student
+        function generateQR() {
+            let name = document.getElementById("name").value.trim();
+            let roll = document.getElementById("roll").value.trim();
+            let course = document.getElementById("course").value;
+            let branch = document.getElementById("branch").value;
+
+            if (!name || !roll) {
+                alert("Please fill all fields!");
+                return;
+            }
+
+            document.getElementById("qrcode").innerHTML = "";
+            let qrPayload = JSON.stringify({ name: name, roll: roll, course: course, branch: branch });
+
+            new QRCode(document.getElementById("qrcode"), {
+                text: qrPayload,
+                width: 140,
+                height: 140
+            });
+
+            document.getElementById("disp-name").innerText = name;
+            document.getElementById("disp-roll").innerText = "Roll: " + roll;
+            document.getElementById("disp-dept").innerText = course + " - " + branch;
+        }
+
+        // Authentication Modal Logic
+        function openLoginModal() { document.getElementById("loginModal").style.display = "flex"; }
+        function closeLoginModal() { document.getElementById("loginModal").style.display = "none"; }
+
+        function authenticateAdmin() {
+            let user = document.getElementById("adminUser").value;
+            let pass = document.getElementById("adminPass").value;
+
+            // Default Credentials
+            if (user === "admin" && pass === "admin125") {
+                document.getElementById("studentView").classList.remove("active");
+                document.getElementById("adminView").classList.add("active");
+                document.getElementById("loginBtn").style.display = "none";
+                document.getElementById("logoutBtn").style.display = "inline-block";
+                closeLoginModal();
+            } else {
+                alert("Invalid Admin Credentials!");
+            }
+        }
+
+        function logoutAdmin() {
+            document.getElementById("adminView").classList.remove("active");
+            document.getElementById("studentView").classList.add("active");
+            document.getElementById("loginBtn").style.display = "inline-block";
+            document.getElementById("logoutBtn").style.display = "none";
+        }
+    </script>
+</body>
+</html>

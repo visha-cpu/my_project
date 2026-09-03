@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vishal Mart - Super Savings Everyday | Grocery & Fashion</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        @keyframes slideIn { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; }}
+        .toast-anim { animation: slideIn 0.3s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans antialiased text-slate-800">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2"></div>
+
+    <!-- Top Utility Bar -->
+    <div class="bg-yellow-400 text-slate-900 text-xs py-2 px-4 font-bold">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <span><i class="fa-solid fa-tag text-red-600 mr-1"></i> India's Trusted Hypermarket | Use Coupon Code <span class="bg-red-600 text-white px-2 py-0.5 rounded-md tracking-wider">@vishal</span> for 20% OFF!</span>
+            <div class="space-x-4">
+                <span id="user-welcome" class="font-bold text-slate-800">Welcome, Guest!</span>
+                <button onclick="openAdminLogin()" class="text-red-700 hover:underline"><i class="fa-solid fa-lock mr-1"></i>Admin Portal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header & Navigation -->
+    <header class="sticky top-0 z-40 bg-white border-b shadow-sm backdrop-blur-md bg-opacity-95">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <div class="flex items-center space-x-6">
+                <span class="text-2xl font-black tracking-wider text-blue-950 cursor-pointer flex items-center gap-1" onclick="switchView('store')">
+                    <span class="bg-yellow-400 text-red-700 px-2.5 py-1 rounded-xl shadow">VISHAL</span>MART
+                </span>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="flex-1 max-w-xl hidden md:flex items-center">
+                <div class="relative w-full">
+                    <input type="text" id="search-input" onkeyup="handleSearch()" placeholder="Search groceries, electronics, apparel..." class="w-full bg-slate-100 border border-transparent focus:border-red-500 focus:bg-white rounded-full py-2.5 pl-10 pr-4 text-sm transition outline-none">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                </div>
+            </div>
+
+            <!-- Right Nav Actions -->
+            <div class="flex items-center space-x-5">
+                <button onclick="switchView('wishlist')" class="relative p-2 hover:bg-slate-100 rounded-full transition">
+                    <i class="fa-regular fa-heart text-xl text-slate-700"></i>
+                    <span id="wishlist-badge" class="absolute top-0 right-0 bg-red-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+                </button>
+                <button onclick="switchView('orders')" class="hidden sm:flex items-center space-x-1 text-slate-700 hover:text-red-600 font-medium text-sm">
+                    <i class="fa-solid fa-box-archive text-lg"></i>
+                    <span>Orders</span>
+                </button>
+                <button onclick="toggleCartModal()" class="relative p-2 hover:bg-slate-100 rounded-full transition">
+                    <i class="fa-solid fa-cart-shopping text-xl text-slate-700"></i>
+                    <span id="cart-badge" class="absolute top-0 right-0 bg-red-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+                </button>
+                <button id="auth-btn" onclick="openAuthModal()" class="bg-red-600 text-white px-5 py-2.5 rounded-xl font-bold text-xs hover:bg-red-700 shadow-md transition">Login</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- 1. STORE VIEW -->
+        <section id="view-store">
+            <div class="bg-gradient-to-r from-red-600 via-orange-600 to-yellow-500 rounded-3xl p-8 mb-8 text-white shadow-xl flex flex-col md:flex-row justify-between items-center relative overflow-hidden">
+                <div class="relative z-10">
+                    <span class="bg-yellow-300 text-red-950 text-xs font-black uppercase px-3 py-1 rounded-full shadow-sm">Bada Bachat Bazaar</span>
+                    <h1 class="text-3xl md:text-5xl font-black mt-3 leading-tight">Pehle Se Sasta, Ab Aur Bhi Behtar!</h1>
+                    <p class="mt-2 text-yellow-100 text-sm font-medium">Grocery, Fashion & Household Items par भारी छूट। Apply code <b class="underline">@vishal</b> at checkout!</p>
+                </div>
+                <div class="mt-6 md:mt-0 bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
+                    <span class="text-xs uppercase font-bold text-yellow-200 block">Special Offer</span>
+                    <span class="text-3xl font-black block mt-1">Flat 20% OFF</span>
+                    <span class="text-xs mt-1 block opacity-90">Use coupon <code class="bg-black/30 px-2 py-0.5 rounded text-yellow-300 font-bold">@vishal</code></span>
+                </div>
+            </div>
+
+            <!-- Categories & Filters -->
+            <div class="flex items-center justify-between mb-6 flex-wrap gap-4">
+                <div class="flex gap-2 overflow-x-auto pb-2" id="category-filters">
+                    <button onclick="filterCategory('All')" class="px-5 py-2 rounded-full bg-red-600 text-white text-xs font-bold shadow-sm transition">All Products</button>
+                    <button onclick="filterCategory('Grocery')" class="px-5 py-2 rounded-full bg-white border text-slate-700 text-xs font-bold hover:bg-slate-100 transition">Grocery & Staples</button>
+                    <button onclick="filterCategory('Fashion')" class="px-5 py-2 rounded-full bg-white border text-slate-700 text-xs font-bold hover:bg-slate-100 transition">Apparel & Fashion</button>
+                    <button onclick="filterCategory('Home Appliances')" class="px-5 py-2 rounded-full bg-white border text-slate-700 text-xs font-bold hover:bg-slate-100 transition">Home & Kitchen</button>
+                </div>
+                <span id="product-count" class="text-sm text-slate-500 font-medium">Loading catalog...</span>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+        </section>
+
+        <!-- 2. WISHLIST VIEW -->
+        <section id="view-wishlist" class="hidden max-w-5xl mx-auto">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6"><i class="fa-solid fa-heart text-red-600 mr-2"></i>My Wishlist</h2>
+            <div id="wishlist-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+        </section>
+
+        <!-- 3. ORDERS VIEW -->
+        <section id="view-orders" class="hidden max-w-4xl mx-auto">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6"><i class="fa-solid fa-box-archive text-red-600 mr-2"></i>Order History & Tracking</h2>
+            <div id="orders-list-container" class="space-y-4"></div>
+        </section>
+
+        <!-- 4. ADMIN PANEL VIEW -->
+        <section id="view-admin" class="hidden">
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900"><i class="fa-solid fa-gauge text-red-600 mr-2"></i>Vishal Mart Admin Control</h2>
+                    <p class="text-xs text-slate-500">Manage hypermarket inventory, customer orders, and delivery boys.</p>
+                </div>
+                <button onclick="switchView('store')" class="bg-slate-200 text-slate-800 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-300">Exit Admin</button>
+            </div>
+
+            <div class="flex space-x-6 mb-6 border-b overflow-x-auto">
+                <button onclick="switchAdminTab('products')" id="admin-tab-btn-products" class="pb-2 font-bold text-red-600 border-b-2 border-red-600 text-sm whitespace-nowrap">Inventory Manager</button>
+                <button onclick="switchAdminTab('orders')" id="admin-tab-btn-orders" class="pb-2 font-bold text-slate-500 hover:text-slate-800 text-sm whitespace-nowrap">Customer Orders & Assignment</button>
+                <button onclick="switchAdminTab('delivery')" id="admin-tab-btn-delivery" class="pb-2 font-bold text-slate-500 hover:text-slate-800 text-sm whitespace-nowrap">Delivery Boys Team</button>
+                <button onclick="switchAdminTab('stats')" id="admin-tab-btn-stats" class="pb-2 font-bold text-slate-500 hover:text-slate-800 text-sm whitespace-nowrap">Revenue Analytics</button>
+            </div>
+
+            <!-- Inventory Tab -->
+            <div id="admin-panel-products">
+                <div class="bg-white p-6 rounded-2xl border shadow-sm mb-6">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">Add New Item to Catalog</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
+                        <input type="text" id="new-p-title" placeholder="Product Title" class="border rounded-xl px-3 py-2 text-sm outline-none focus:border-red-500">
+                        <input type="number" id="new-p-price" placeholder="Price in ₹" class="border rounded-xl px-3 py-2 text-sm outline-none focus:border-red-500">
+                        <input type="number" id="new-p-stock" placeholder="Stock Qty" class="border rounded-xl px-3 py-2 text-sm outline-none focus:border-red-500">
+                        <select id="new-p-cat" class="border rounded-xl px-3 py-2 text-sm bg-white outline-none">
+                            <option value="Grocery">Grocery</option>
+                            <option value="Fashion">Fashion</option>
+                            <option value="Home Appliances">Home Appliances</option>
+                        </select>
+                        <input type="text" id="new-p-image" placeholder="Image URL (Unsplash)" class="border rounded-xl px-3 py-2 text-sm outline-none focus:border-red-500">
+                    </div>
+                    <button onclick="addNewProduct()" class="bg-red-600 text-white font-semibold px-6 py-2.5 rounded-xl text-sm hover:bg-red-700 shadow">Save Product</button>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-b">
+                                <th class="p-4">Item</th>
+                                <th class="p-4">Title</th>
+                                <th class="p-4">Category</th>
+                                <th class="p-4">Price</th>
+                                <th class="p-4">Stock</th>
+                                <th class="p-4">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-product-table" class="divide-y text-sm"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Orders Tab with Delivery Boy Assignment -->
+            <div id="admin-panel-orders" class="hidden">
+                <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-b">
+                                <th class="p-4">Order ID</th>
+                                <th class="p-4">Customer Details</th>
+                                <th class="p-4">Total Amount</th>
+                                <th class="p-4">Payment</th>
+                                <th class="p-4">Assign Delivery Boy & Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-order-table" class="divide-y text-sm"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Delivery Boy Management Tab -->
+            <div id="admin-panel-delivery" class="hidden">
+                <div class="bg-white p-6 rounded-2xl border shadow-sm mb-6">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">Add New Delivery Partner</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <input type="text" id="new-d-name" placeholder="Delivery Boy Name" class="border rounded-xl px-3 py-2 text-sm outline-none focus:border-red-500">
+                        <input type="tel" id="new-d-phone" maxlength="10" placeholder="Mobile Number" class="border rounded-xl px-3 py-2 text-sm outline-none focus:border-red-500">
+                        <input type="text" id="new-d-vehicle" placeholder="Vehicle No (e.g. DL-01-AB-1234)" class="border rounded-xl px-3 py-2 text-sm outline-none focus:border-red-500">
+                    </div>
+                    <button onclick="addNewDeliveryBoy()" class="bg-red-600 text-white font-semibold px-6 py-2.5 rounded-xl text-sm hover:bg-red-700 shadow">Add Delivery Partner</button>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-b">
+                                <th class="p-4">Partner Name</th>
+                                <th class="p-4">Mobile Number</th>
+                                <th class="p-4">Vehicle Details</th>
+                                <th class="p-4">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-delivery-table" class="divide-y text-sm"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="admin-panel-stats" class="hidden grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                    <h4 class="text-xs uppercase text-slate-400 font-bold mb-1">Total Products</h4>
+                    <p id="stat-prod-count" class="text-3xl font-black text-red-600">0</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                    <h4 class="text-xs uppercase text-slate-400 font-bold mb-1">Total Orders</h4>
+                    <p id="stat-order-count" class="text-3xl font-black text-yellow-600">0</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                    <h4 class="text-xs uppercase text-slate-400 font-bold mb-1">Total Revenue</h4>
+                    <p id="stat-revenue" class="text-3xl font-black text-emerald-600">₹0</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODALS -->
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden backdrop-blur-sm">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 relative">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl">&times;</button>
+            <div id="auth-step-1">
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Customer Login</h3>
+                <p class="text-sm text-slate-500 mb-6">Enter your mobile number to receive instant OTP verification.</p>
+                <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Mobile Number</label>
+                <div class="flex items-center border rounded-xl overflow-hidden mb-4">
+                    <span class="bg-slate-100 px-3 py-2.5 text-slate-600 font-medium text-sm border-r">+91</span>
+                    <input type="tel" id="mobile-input" maxlength="10" placeholder="10-digit number" class="w-full px-3 py-2.5 text-sm outline-none">
+                </div>
+                <button onclick="sendOTP()" class="w-full bg-red-600 text-white font-semibold py-3 rounded-xl hover:bg-red-700 transition">Get OTP</button>
+            </div>
+            <div id="auth-step-2" class="hidden">
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Verify OTP Code</h3>
+                <p class="text-sm text-slate-500 mb-6">Enter 4-digit code sent to <span id="display-mobile" class="font-semibold text-slate-800"></span></p>
+                <input type="text" id="otp-input" maxlength="4" placeholder="1234" class="w-full border rounded-xl px-4 py-3 mb-4 text-center tracking-widest text-lg font-bold outline-none">
+                <button onclick="verifyOTP()" class="w-full bg-red-600 text-white font-semibold py-3 rounded-xl hover:bg-red-700 transition">Verify & Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Password Modal -->
+    <div id="admin-login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden backdrop-blur-sm">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 relative">
+            <button onclick="closeAdminLogin()" class="absolute top-4 right-4 text-slate-400 text-xl">&times;</button>
+            <h3 class="text-lg font-bold text-slate-900 mb-4"><i class="fa-solid fa-lock text-red-600 mr-2"></i>Admin Security</h3>
+            <input type="password" id="admin-pass-input" placeholder="Password (admin123)" class="w-full border rounded-xl px-3 py-2.5 text-sm mb-4 outline-none focus:border-red-500">
+            <button onclick="verifyAdminPass()" class="w-full bg-red-600 text-white font-semibold py-2.5 rounded-xl hover:bg-red-700 text-sm transition">Access Dashboard</button>
+        </div>
+    </div>
+
+    <!-- Cart Slide-over Modal -->
+    <div id="cart-modal" class="fixed inset-0 overflow-hidden z-50 hidden">
+        <div class="absolute inset-0 bg-slate-500 bg-opacity-75 transition-opacity backdrop-blur-xs" onclick="toggleCartModal()"></div>
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+                <div class="flex items-center justify-between px-6 py-6 bg-red-600 text-white">
+                    <h2 class="text-lg font-bold"><i class="fa-solid fa-bag-shopping mr-2"></i>Vishal Mart Cart</h2>
+                    <button onclick="toggleCartModal()" class="text-white text-xl">&times;</button>
+                </div>
+                <div class="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar" id="cart-items-container"></div>
+                
+                <!-- Coupon Section -->
+                <div class="px-6 py-3 bg-yellow-50 border-t border-b flex items-center gap-2">
+                    <input type="text" id="coupon-input" placeholder="Enter Coupon (@vishal)" class="flex-1 border rounded-xl px-3 py-2 text-xs uppercase outline-none font-bold">
+                    <button onclick="applyCoupon()" class="bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-slate-800">Apply</button>
+                </div>
+
+                <div class="border-t p-6 bg-slate-50">
+                    <div id="discount-row" class="hidden justify-between text-xs font-semibold text-emerald-600 mb-2">
+                        <span>Coupon Discount (20%)</span>
+                        <span id="discount-amount">-₹0</span>
+                    </div>
+                    <div class="flex justify-between text-base font-bold text-slate-900 mb-4">
+                        <span>Final Payable</span>
+                        <span id="cart-total" class="text-red-600">₹0.00</span>
+                    </div>
+                    <button onclick="proceedToCheckout()" class="w-full bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-extrabold py-3 rounded-xl shadow transition">Proceed to Secure Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden backdrop-blur-sm">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button onclick="closeCheckoutModal()" class="absolute top-4 right-4 text-slate-400 text-xl">&times;</button>
+            <h3 class="text-xl font-bold text-slate-900 mb-4"><i class="fa-solid fa-credit-card text-red-600 mr-2"></i>Delivery & Payment Details</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Full Name</label>
+                    <input type="text" id="chk-name" placeholder="Rohan Kumar" class="w-full border rounded-xl px-3 py-2.5 text-sm outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Address</label>
+                    <input type="text" id="chk-address" placeholder="House No, Area, Landmark" class="w-full border rounded-xl px-3 py-2.5 text-sm outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">State</label>
+                        <select id="chk-state" class="w-full border rounded-xl px-3 py-2.5 text-sm bg-white outline-none">
+                            <option value="Delhi">Delhi</option>
+                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">PIN Code</label>
+                        <input type="text" id="chk-pincode" maxlength="6" placeholder="110001" class="w-full border rounded-xl px-3 py-2.5 text-sm outline-none">
+                    </div>
+                </div>
+                <div class="pt-2">
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">Payment Method</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center space-x-3 border p-3 rounded-xl cursor-pointer hover:bg-slate-50">
+                            <input type="radio" name="payment" value="UPI" checked class="text-red-600">
+                            <span class="text-sm font-medium text-slate-800">UPI / Google Pay / PhonePe</span>
+                        </label>
+                        <label class="flex items-center space-x-3 border p-3 rounded-xl cursor-pointer hover:bg-slate-50">
+                            <input type="radio" name="payment" value="COD" class="text-red-600">
+                            <span class="text-sm font-medium text-slate-800">Cash on Delivery (COD)</span>
+                        </label>
+                    </div>
+                </div>
+                <button onclick="processPaymentAndBilling()" class="w-full bg-red-600 text-white font-semibold py-3 rounded-xl hover:bg-red-700 shadow mt-4 transition">Confirm Order & Generate Bill</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tax Invoice Modal -->
+    <div id="invoice-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden backdrop-blur-sm">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 relative max-h-[95vh] overflow-y-auto">
+            <div id="invoice-print-area">
+                <div class="flex justify-between items-center border-b pb-4 mb-4">
+                    <div>
+                        <h2 class="text-xl font-black text-red-600">VISHAL MART</h2>
+                        <p class="text-[10px] text-slate-500">GSTIN: 07AABCW1234K1ZV | Hypermarket Division</p>
+                    </div>
+                    <div class="text-right">
+                        <h4 class="text-xs font-bold text-slate-800">TAX INVOICE</h4>
+                        <p id="inv-id" class="text-xs text-slate-500"></p>
+                    </div>
+                </div>
+                <div class="mb-4 text-xs space-y-1">
+                    <p class="font-semibold text-slate-700">Billed To:</p>
+                    <p id="inv-customer" class="text-slate-900 font-medium"></p>
+                    <p id="inv-address" class="text-slate-600"></p>
+                    <p id="inv-delivery-boy" class="text-blue-700 font-semibold mt-2"></p>
+                </div>
+                <table class="w-full text-left text-xs mb-4 border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100 border-b">
+                            <th class="p-2">Item</th>
+                            <th class="p-2">Qty</th>
+                            <th class="p-2">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inv-items" class="divide-y"></tbody>
+                </table>
+                <div class="border-t pt-2 text-right text-sm">
+                    <p id="inv-coupon-applied" class="text-emerald-600 font-semibold text-xs mb-1"></p>
+                    <p class="font-bold text-slate-900">Total Paid: <span id="inv-total" class="text-red-600"></span></p>
+                </div>
+            </div>
+            
+            <div class="mt-6 space-y-2">
+                <a id="whatsapp-btn" href="#" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center space-x-2 shadow transition">
+                    <i class="fa-brands fa-whatsapp text-lg"></i>
+                    <span>Send Order Details on WhatsApp</span>
+                </a>
+                <div class="flex space-x-3">
+                    <button onclick="window.print()" class="flex-1 bg-slate-200 text-slate-800 font-semibold py-2.5 rounded-xl text-sm hover:bg-slate-300">Print Bill</button>
+                    <button onclick="closeInvoiceModal()" class="flex-1 bg-red-600 text-white font-semibold py-2.5 rounded-xl text-sm hover:bg-red-700">View Orders</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APP ENGINE -->
+    <script>
+        const defaultProducts = [
+            { id: 1, title: "Aashirvaad Superior MP Atta 10kg", price: 420, stock: 25, category: "Grocery", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&auto=format&fit=crop&q=60" },
+            { id: 2, title: "Fortune Sun Lite Sunflower Oil 1L", price: 135, stock: 40, category: "Grocery", image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&auto=format&fit=crop&q=60" },
+            { id: 3, title: "Men's Casual Cotton Check Shirt", price: 699, stock: 15, category: "Fashion", image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500&auto=format&fit=crop&q=60" },
+            { id: 4, title: "Prestige Electric Kettle 1.5L", price: 899, stock: 10, category: "Home Appliances", image: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500&auto=format&fit=crop&q=60" }
+        ];
+
+        const defaultDeliveryBoys = [
+            { id: 101, name: "Rahul Singh", phone: "9876543210", vehicle: "DL-01-AB-1234" },
+            { id: 102, name: "Amit Kumar", phone: "9123456789", vehicle: "UP-16-XY-5678" }
+        ];
+
+        if (!localStorage.getItem('vishal_products')) localStorage.setItem('vishal_products', JSON.stringify(defaultProducts));
+        if (!localStorage.getItem('vishal_delivery_boys')) localStorage.setItem('vishal_delivery_boys', JSON.stringify(defaultDeliveryBoys));
+        if (!localStorage.getItem('vishal_orders')) localStorage.setItem('vishal_orders', JSON.stringify([]));
+
+        let cart = [];
+        let wishlist = [];
+        let currentUser = null;
+        let tempMobile = "";
+        let activeCategory = "All";
+        let searchQuery = "";
+        let couponDiscountPercent = 0;
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast-anim px-4 py-3 rounded-2xl shadow-lg text-white text-xs font-semibold flex items-center space-x-2 ${type === 'success' ? 'bg-emerald-600' : 'bg-rose-600'}`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'} text-sm"></i><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function switchView(view) {
+            document.getElementById('view-store').classList.add('hidden');
+            document.getElementById('view-wishlist').classList.add('hidden');
+            document.getElementById('view-orders').classList.add('hidden');
+            document.getElementById('view-admin').classList.add('hidden');
+
+            if (view === 'store') document.getElementById('view-store').classList.remove('hidden');
+            if (view === 'wishlist') { renderWishlist(); document.getElementById('view-wishlist').classList.remove('hidden'); }
+            if (view === 'orders') { renderOrdersList(); document.getElementById('view-orders').classList.remove('hidden'); }
+            if (view === 'admin') { loadAdminData(); document.getElementById('view-admin').classList.remove('hidden'); }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function filterCategory(cat) {
+            activeCategory = cat;
+            renderProducts();
+        }
+
+        function handleSearch() {
+            searchQuery = document.getElementById('search-input').value.toLowerCase();
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const products = JSON.parse(localStorage.getItem('vishal_products'));
+            let filtered = activeCategory === 'All' ? products : products.filter(p => p.category === activeCategory);
+            
+            if (searchQuery) {
+                filtered = filtered.filter(p => p.title.toLowerCase().includes(searchQuery));
+            }
+
+            const grid = document.getElementById('product-grid');
+            document.getElementById('product-count').innerText = `Showing ${filtered.length} items`;
+            
+            grid.innerHTML = filtered.map(p => {
+                const isWishlisted = wishlist.some(w => w.id === p.id);
+                return `
+                    <div class="bg-white rounded-3xl border shadow-sm hover:shadow-xl transition overflow-hidden flex flex-col justify-between group relative">
+                        <button onclick="toggleWishlist(${p.id})" class="absolute top-3 right-3 z-10 bg-white/85 backdrop-blur-md p-2 rounded-full shadow hover:bg-white transition">
+                            <i class="fa-${isWishlisted ? 'solid text-red-600' : 'regular text-slate-600'} fa-heart"></i>
+                        </button>
+                        <div>
+                            <div class="overflow-hidden h-48 bg-slate-100">
+                                <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            </div>
+                            <div class="p-5">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-[10px] font-bold text-red-600 uppercase bg-red-50 px-2.5 py-0.5 rounded-full">${p.category}</span>
+                                    <span class="text-[10px] font-bold ${p.stock > 0 ? 'text-emerald-600 bg-emerald-50' : 'text-rose-600 bg-rose-50'} px-2 py-0.5 rounded-full">
+                                        ${p.stock > 0 ? 'Stock: ' + p.stock : 'Out of Stock'}
+                                    </span>
+                                </div>
+                                <h3 class="font-semibold text-sm text-slate-800 line-clamp-2 mt-2">${p.title}</h3>
+                                <p class="text-red-600 font-black text-lg mt-2">₹${p.price.toLocaleString('en-IN')}</p>
+                            </div>
+                        </div>
+                        <div class="p-5 pt-0">
+                            <button onclick="addToCart(${p.id})" ${p.stock <= 0 ? 'disabled' : ''} class="w-full ${p.stock > 0 ? 'bg-slate-900 hover:bg-red-600 shadow-lg' : 'bg-slate-200 cursor-not-allowed'} text-white font-semibold py-2.5 rounded-xl text-xs transition">
+                                ${p.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleWishlist(id) {
+            const products = JSON.parse(localStorage.getItem('vishal_products'));
+            const product = products.find(p => p.id === id);
+            const index = wishlist.findIndex(w => w.id === id);
+
+            if (index > -1) {
+                wishlist.splice(index, 1);
+                showToast("Removed from Wishlist", "error");
+            } else {
+                wishlist.push(product);
+                showToast("Added to Wishlist!");
+            }
+            document.getElementById('wishlist-badge').innerText = wishlist.length;
+            renderProducts();
+            if(!document.getElementById('view-wishlist').classList.contains('hidden')) renderWishlist();
+        }
+
+        function renderWishlist() {
+            const grid = document.getElementById('wishlist-grid');
+            if (wishlist.length === 0) {
+                grid.innerHTML = `<p class="text-slate-400 text-center col-span-full py-12 text-sm">Your wishlist is empty.</p>`;
+                return;
+            }
+            grid.innerHTML = wishlist.map(p => `
+                <div class="bg-white rounded-3xl border shadow-sm p-4 flex flex-col justify-between">
+                    <div>
+                        <img src="${p.image}" class="w-full h-40 object-cover rounded-2xl mb-3">
+                        <h4 class="font-semibold text-sm text-slate-800 line-clamp-1">${p.title}</h4>
+                        <p class="text-red-600 font-bold mt-1">₹${p.price.toLocaleString('en-IN')}</p>
+                    </div>
+                    <button onclick="addToCart(${p.id}); toggleWishlist(${p.id})" class="mt-4 w-full bg-red-600 text-white py-2 rounded-xl text-xs font-semibold hover:bg-red-700">Move to Cart</button>
+                </div>
+            `).join('');
+        }
+
+        function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
+        function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+
+        function sendOTP() {
+            const mobile = document.getElementById('mobile-input').value.trim();
+            if (mobile.length !== 10 || isNaN(mobile)) { showToast("Enter valid 10-digit mobile number.", "error"); return; }
+            tempMobile = mobile;
+            document.getElementById('display-mobile').innerText = "+91 " + mobile;
+            document.getElementById('auth-step-1').classList.add('hidden');
+            document.getElementById('auth-step-2').classList.remove('hidden');
+            showToast("OTP sent: Use '1234' for demo.");
+        }
+
+        function verifyOTP() {
+            const otp = document.getElementById('otp-input').value.trim();
+            if (otp !== "1234") { showToast("Invalid OTP code. Use 1234.", "error"); return; }
+            currentUser = tempMobile;
+            document.getElementById('user-welcome').innerText = `Hello, +91 ${currentUser}`;
+            document.getElementById('auth-btn').innerText = "Logout";
+            document.getElementById('auth-btn').setAttribute("onclick", "logoutUser()");
+            closeAuthModal();
+            showToast("Successfully logged in!");
+        }
+
+        function logoutUser() {
+            currentUser = null;
+            document.getElementById('user-welcome').innerText = "Welcome, Guest!";
+            document.getElementById('auth-btn').innerText = "Login";
+            document.getElementById('auth-btn').setAttribute("onclick", "openAuthModal()");
+            document.getElementById('auth-step-1').classList.remove('hidden');
+            document.getElementById('auth-step-2').classList.add('hidden');
+            document.getElementById('mobile-input').value = "";
+            document.getElementById('otp-input').value = "";
+            showToast("Logged out successfully.");
+        }
+
+        function addToCart(id) {
+            const products = JSON.parse(localStorage.getItem('vishal_products'));
+            const product = products.find(p => p.id === id);
+            if(product.stock <= 0) { showToast("Item out of stock!", "error"); return; }
+
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                if(existing.qty >= product.stock) { showToast("Maximum available stock reached.", "error"); return; }
+                existing.qty++;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            updateCartBadge();
+            showToast("Added to shopping bag!");
+        }
+
+        function updateCartBadge() {
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('cart-badge').innerText = totalItems;
+        }
+
+        function toggleCartModal() {
+            const modal = document.getElementById('cart-modal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) renderCartItems();
+        }
+
+        function applyCoupon() {
+            const val = document.getElementById('coupon-input').value.trim();
+            if (val === "@vishal") {
+                couponDiscountPercent = 20;
+                showToast("Coupon '@vishal' applied successfully! 20% OFF");
+                renderCartItems();
+            } else {
+                couponDiscountPercent = 0;
+                showToast("Invalid coupon code! Try '@vishal'", "error");
+                renderCartItems();
+            }
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cart-items-container');
+            if (cart.length === 0) {
+                container.innerHTML = `<p class="text-slate-400 text-center py-12 text-sm">Your cart is empty.</p>`;
+                document.getElementById('cart-total').innerText = "₹0.00";
+                document.getElementById('discount-row').classList.add('hidden');
+                return;
+            }
+            let subtotal = 0;
+            container.innerHTML = cart.map(item => {
+                subtotal += item.price * item.qty;
+                return `
+                    <div class="flex items-center justify-between border-b pb-4">
+                        <div class="flex items-center space-x-3">
+                            <img src="${item.image}" class="w-16 h-16 object-cover rounded-xl">
+                            <div>
+                                <h4 class="font-semibold text-xs text-slate-800 line-clamp-1">${item.title}</h4>
+                                <p class="text-xs text-red-600 font-bold mt-1">₹${item.price.toLocaleString('en-IN')}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="updateQty(${item.id}, -1)" class="w-6 h-6 rounded bg-slate-100 text-slate-700 font-bold text-xs">-</button>
+                            <span class="text-xs font-bold">${item.qty}</span>
+                            <button onclick="updateQty(${item.id}, 1)" class="w-6 h-6 rounded bg-slate-100 text-slate-700 font-bold text-xs">+</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            let discount = (subtotal * couponDiscountPercent) / 100;
+            let finalTotal = subtotal - discount;
+
+            if (couponDiscountPercent > 0) {
+                document.getElementById('discount-row').classList.remove('hidden');
+                document.getElementById('discount-amount').innerText = `-₹${discount.toFixed(0)}`;
+            } else {
+                document.getElementById('discount-row').classList.add('hidden');
+            }
+
+            document.getElementById('cart-total').innerText = `₹${finalTotal.toLocaleString('en-IN')}`;
+        }
+
+        function updateQty(id, change) {
+            const item = cart.find(i => i.id === id);
+            const products = JSON.parse(localStorage.getItem('vishal_products'));
+            const product = products.find(p => p.id === id);
+
+            if (item) {
+                item.qty += change;
+                if (item.qty > product.stock) {
+                    item.qty = product.stock;
+                    showToast("Reached stock limit.", "error");
+                }
+                if (item.qty <= 0) {
+                    cart = cart.filter(i => i.id !== id);
+                }
+                renderCartItems();
+                updateCartBadge();
+            }
+        }
+
+        function proceedToCheckout() {
+            if (cart.length === 0) { showToast("Your cart is empty.", "error"); return; }
+            toggleCartModal();
+            document.getElementById('checkout-modal').classList.remove('hidden');
+        }
+
+        function closeCheckoutModal() { document.getElementById('checkout-modal').classList.add('hidden'); }
+        function closeInvoiceModal() { document.getElementById('invoice-modal').classList.add('hidden'); switchView('orders'); }
+
+        function processPaymentAndBilling() {
+            const name = document.getElementById('chk-name').value.trim();
+            const address = document.getElementById('chk-address').value.trim();
+            const pincode = document.getElementById('chk-pincode').value.trim();
+            const state = document.getElementById('chk-state').value;
+            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+
+            if (!name || !address || pincode.length !== 6) {
+                showToast("Please enter complete delivery details.", "error");
+                return;
+            }
+
+            let subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            let discount = (subtotal * couponDiscountPercent) / 100;
+            let finalTotal = subtotal - discount;
+            let orderId = "VISHAL-" + Math.floor(100000 + Math.random() * 900000);
+            
+            let newOrder = {
+                id: orderId,
+                customer: name,
+                mobile: currentUser || "9876543210",
+                address: `${address}, ${state} - ${pincode}`,
+                items: [...cart],
+                subtotal: subtotal,
+                discount: discount,
+                couponUsed: couponDiscountPercent > 0 ? "@vishal" : "None",
+                total: finalTotal,
+                payment: paymentMethod,
+                status: "Order Placed",
+                deliveryBoy: "Not Assigned",
+                date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+            };
+
+            let products = JSON.parse(localStorage.getItem('vishal_products'));
+            cart.forEach(cartItem => {
+                let p = products.find(prod => prod.id === cartItem.id);
+                if(p) p.stock -= cartItem.qty;
+            });
+            localStorage.setItem('vishal_products', JSON.stringify(products));
+
+            let orders = JSON.parse(localStorage.getItem('vishal_orders'));
+            orders.unshift(newOrder);
+            localStorage.setItem('vishal_orders', JSON.stringify(orders));
+
+            cart = [];
+            couponDiscountPercent = 0;
+            updateCartBadge();
+            closeCheckoutModal();
+            renderProducts();
+
+            document.getElementById('inv-id').innerText = `Order ID: ${newOrder.id}`;
+            document.getElementById('inv-customer').innerText = newOrder.customer;
+            document.getElementById('inv-address').innerText = newOrder.address;
+            document.getElementById('inv-delivery-boy').innerText = `Delivery Partner: ${newOrder.deliveryBoy}`;
+            document.getElementById('inv-total').innerText = `₹${newOrder.total.toLocaleString('en-IN')}`;
+            if (newOrder.couponUsed === "@vishal") {
+                document.getElementById('inv-coupon-applied').innerText = `Coupon Applied: @vishal (Saved ₹${newOrder.discount})`;
+            } else {
+                document.getElementById('inv-coupon-applied').innerText = "";
+            }
+
+            document.getElementById('inv-items').innerHTML = newOrder.items.map(i => `
+                <tr class="border-b">
+                    <td class="p-2">${i.title}</td>
+                    <td class="p-2">${i.qty}</td>
+                    <td class="p-2">₹${(i.price * i.qty).toLocaleString('en-IN')}</td>
+                </tr>
+            `).join('');
+
+            let waText = `🛍️ *Order Confirmation - Vishal Mart*\n\n*Order ID:* ${newOrder.id}\n*Customer:* ${newOrder.customer}\n*Delivery Address:* ${newOrder.address}\n*Payment:* ${newOrder.payment}\n*Coupon:* ${newOrder.couponUsed}\n\n*Items Ordered:*\n` + 
+                newOrder.items.map(i => `- ${i.title} (x${i.qty}): ₹${i.price * i.qty}`).join('\n') + 
+                `\n\n*Total Paid:* ₹${newOrder.total.toLocaleString('en-IN')}\n\nThank you for shopping with Vishal Mart!`;
+            
+            document.getElementById('whatsapp-btn').href = `https://api.whatsapp.com/send?phone=91${newOrder.mobile}&text=${encodeURIComponent(waText)}`;
+
+            document.getElementById('invoice-modal').classList.remove('hidden');
+            showToast("Order placed successfully!");
+        }
+
+        function renderOrdersList() {
+            const orders = JSON.parse(localStorage.getItem('vishal_orders'));
+            const container = document.getElementById('orders-list-container');
+            if (orders.length === 0) {
+                container.innerHTML = `<p class="text-slate-400 text-center py-12 text-sm">No order history found.</p>`;
+                return;
+            }
+            container.innerHTML = orders.map(o => `
+                <div class="bg-white rounded-3xl border shadow-sm p-6">
+                    <div class="flex justify-between items-center border-b pb-4 mb-4">
+                        <div>
+                            <span class="text-xs font-bold text-red-600">${o.id}</span>
+                            <p class="text-xs text-slate-400 mt-0.5">Placed on ${o.date}</p>
+                        </div>
+                        <span class="px-3 py-1 ${o.status === 'Cancelled' ? 'bg-rose-50 text-rose-600' : 'bg-red-50 text-red-700'} text-xs font-bold rounded-full">${o.status}</span>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        ${o.items.map(i => `<div class="flex justify-between text-xs text-slate-700"><span>${i.title} (x${i.qty})</span><span>₹${i.price * i.qty}</span></div>`).join('')}
+                    </div>
+                    <div class="bg-blue-50 border border-blue-100 p-3 rounded-xl mb-4 text-xs text-blue-900">
+                        <i class="fa-solid fa-motorcycle mr-1 text-blue-600"></i> Assigned Delivery Partner: <b class="font-semibold">${o.deliveryBoy}</b>
+                    </div>
+                    <div class="flex justify-between items-center pt-3 border-t text-sm font-bold">
+                        <span>Total: ₹${o.total.toLocaleString('en-IN')} ${o.couponUsed === '@vishal' ? '<span class="text-xs text-emerald-600 font-normal">(20% off applied)</span>' : ''}</span>
+                        <a href="https://api.whatsapp.com/send?phone=91${o.mobile}&text=${encodeURIComponent('Hi, checking update for Order ID: ' + o.id)}" target="_blank" class="text-emerald-600 text-xs flex items-center space-x-1 hover:underline">
+                            <i class="fa-brands fa-whatsapp text-base"></i><span>Track on WhatsApp</span>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Admin Portal Functions
+        function openAdminLogin() { document.getElementById('admin-login-modal').classList.remove('hidden'); }
+        function closeAdminLogin() { document.getElementById('admin-login-modal').classList.add('hidden'); }
+
+        function verifyAdminPass() {
+            const pass = document.getElementById('admin-pass-input').value;
+            if (pass === "admin123") {
+                closeAdminLogin();
+                switchView('admin');
+                showToast("Admin portal accessed!");
+            } else {
+                showToast("Incorrect password! Use admin123", "error");
+            }
+        }
+
+        function switchAdminTab(tab) {
+            document.getElementById('admin-panel-products').classList.add('hidden');
+            document.getElementById('admin-panel-orders').classList.add('hidden');
+            document.getElementById('admin-panel-delivery').classList.add('hidden');
+            document.getElementById('admin-panel-stats').classList.add('hidden');
+            
+            document.getElementById('admin-tab-btn-products').className = "pb-2 font-bold text-slate-500 hover:text-slate-800 text-sm whitespace-nowrap";
+            document.getElementById('admin-tab-btn-orders').className = "pb-2 font-bold text-slate-500 hover:text-slate-800 text-sm whitespace-nowrap";
+            document.getElementById('admin-tab-btn-delivery').className = "pb-2 font-bold text-slate-500 hover:text-slate-800 text-sm whitespace-nowrap";
+            document.getElementById('admin-tab-btn-stats').className = "pb-2 font-bold text-slate-500 hover:text-slate-800 text-sm whitespace-nowrap";
+
+            document.getElementById(`admin-panel-${tab}`).classList.remove('hidden');
+            document.getElementById(`admin-tab-btn-${tab}`).className = "pb-2 font-bold text-red-600 border-b-2 border-red-600 text-sm whitespace-nowrap";
+            loadAdminData();
+        }
+
+        function loadAdminData() {
+            const products = JSON.parse(localStorage.getItem('vishal_products'));
+            const orders = JSON.parse(localStorage.getItem('vishal_orders'));
+            const deliveryBoys = JSON.parse(localStorage.getItem('vishal_delivery_boys'));
+
+            // Products table
+            document.getElementById('admin-product-table').innerHTML = products.map(p => `
+                <tr class="border-b">
+                    <td class="p-4"><img src="${p.image}" class="w-10 h-10 object-cover rounded-lg"></td>
+                    <td class="p-4 font-medium text-slate-800">${p.title}</td>
+                    <td class="p-4 text-slate-500">${p.category}</td>
+                    <td class="p-4 font-bold text-red-600">₹${p.price}</td>
+                    <td class="p-4"><input type="number" value="${p.stock}" onchange="updateStock(${p.id}, this.value)" class="w-16 border rounded px-2 py-1 text-xs"></td>
+                    <td class="p-4"><button onclick="deleteProduct(${p.id})" class="text-rose-500 hover:underline text-xs font-semibold">Delete</button></td>
+                </tr>
+            `).join('');
+
+            // Delivery Boys table
+            document.getElementById('admin-delivery-table').innerHTML = deliveryBoys.map(d => `
+                <tr class="border-b">
+                    <td class="p-4 font-semibold text-slate-800">${d.name}</td>
+                    <td class="p-4 text-slate-600"><i class="fa-solid fa-phone mr-1"></i>+91 ${d.phone}</td>
+                    <td class="p-4 text-slate-500">${d.vehicle}</td>
+                    <td class="p-4"><button onclick="deleteDeliveryBoy(${d.id})" class="text-rose-500 hover:underline text-xs font-semibold">Remove</button></td>
+                </tr>
+            `).join('');
+
+            // Orders table with Delivery Boy Assignment Dropdown
+            document.getElementById('admin-order-table').innerHTML = orders.map(o => `
+                <tr class="border-b">
+                    <td class="p-4 font-semibold text-red-600">${o.id}</td>
+                    <td class="p-4">
+                        <p class="font-bold text-slate-900">${o.customer}</p>
+                        <p class="text-xs text-slate-600"><i class="fa-solid fa-phone mr-1"></i>+91 ${o.mobile}</p>
+                        <p class="text-xs text-slate-500 mt-0.5"><i class="fa-solid fa-location-dot mr-1"></i>${o.address}</p>
+                    </td>
+                    <td class="p-4 font-bold">₹${o.total.toLocaleString('en-IN')} ${o.couponUsed==='@vishal'?'<span class="block text-[10px] text-emerald-600">Coupon: @vishal</span>':''}</td>
+                    <td class="p-4"><span class="bg-slate-100 px-2 py-1 rounded text-xs font-semibold">${o.payment}</span></td>
+                    <td class="p-4 space-y-2">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase">Assign Delivery Partner</label>
+                            <select onchange="assignDeliveryBoy('${o.id}', this.value)" class="border rounded px-2 py-1 text-xs bg-white block w-full outline-none mt-0.5">
+                                <option value="Not Assigned" ${o.deliveryBoy==='Not Assigned'?'selected':''}>Select Delivery Boy</option>
+                                ${deliveryBoys.map(d => `<option value="${d.name} (${d.phone})" ${o.deliveryBoy.startsWith(d.name)?'selected':''}>${d.name} (${d.phone})</option>`).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase">Order Status</label>
+                            <select onchange="updateOrderStatus('${o.id}', this.value)" class="border rounded px-2 py-1 text-xs bg-white block w-full outline-none mt-0.5">
+                                <option ${o.status==='Order Placed'?'selected':''}>Order Placed</option>
+                                <option ${o.status==='Dispatched'?'selected':''}>Dispatched</option>
+                                <option ${o.status==='Delivered'?'selected':''}>Delivered</option>
+                                <option ${o.status==='Cancelled'?'selected':''}>Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="flex space-x-2 pt-1">
+                            <button onclick="cancelOrder('${o.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-2 py-1 rounded text-[11px] font-bold border border-rose-200 transition">Cancel</button>
+                            <button onclick="deleteOrderRecord('${o.id}')" class="bg-slate-100 hover:bg-rose-500 hover:text-white text-slate-600 px-2 py-1 rounded text-[11px] font-bold transition">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            let totalRevenue = orders.filter(o => o.status !== 'Cancelled').reduce((sum, o) => sum + o.total, 0);
+            document.getElementById('stat-prod-count').innerText = products.length;
+            document.getElementById('stat-order-count').innerText = orders.length;
+            document.getElementById('stat-revenue').innerText = `₹${totalRevenue.toLocaleString('en-IN')}`;
+        }
+
+        function addNewProduct() {
+            const title = document.getElementById('new-p-title').value.trim();
+            const price = parseFloat(document.getElementById('new-p-price').value);
+            const stock = parseInt(document.getElementById('new-p-stock').value);
+            const category = document.getElementById('new-p-cat').value;
+            const image = document.getElementById('new-p-image').value.trim() || "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&auto=format&fit=crop&q=60";
+
+            if (!title || isNaN(price) || isNaN(stock)) {
+                showToast("Please fill all product details correctly.", "error");
+                return;
+            }
+
+            let products = JSON.parse(localStorage.getItem('vishal_products'));
+            let newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+            products.push({ id: newId, title, price, stock, category, image });
+            localStorage.setItem('vishal_products', JSON.stringify(products));
+
+            document.getElementById('new-p-title').value = "";
+            document.getElementById('new-p-price').value = "";
+            document.getElementById('new-p-stock').value = "";
+            document.getElementById('new-p-image').value = "";
+
+            loadAdminData();
+            renderProducts();
+            showToast("Product added to catalog!");
+        }
+
+        function addNewDeliveryBoy() {
+            const name = document.getElementById('new-d-name').value.trim();
+            const phone = document.getElementById('new-d-phone').value.trim();
+            const vehicle = document.getElementById('new-d-vehicle').value.trim();
+
+            if (!name || phone.length !== 10 || !vehicle) {
+                showToast("Please enter valid delivery partner details.", "error");
+                return;
+            }
+
+            let deliveryBoys = JSON.parse(localStorage.getItem('vishal_delivery_boys'));
+            let newId = deliveryBoys.length > 0 ? Math.max(...deliveryBoys.map(d => d.id)) + 1 : 101;
+            deliveryBoys.push({ id: newId, name, phone, vehicle });
+            localStorage.setItem('vishal_delivery_boys', JSON.stringify(deliveryBoys));
+
+            document.getElementById('new-d-name').value = "";
+            document.getElementById('new-d-phone').value = "";
+            document.getElementById('new-d-vehicle').value = "";
+
+            loadAdminData();
+            showToast("Delivery partner added successfully!");
+        }
+
+        function deleteDeliveryBoy(id) {
+            let deliveryBoys = JSON.parse(localStorage.getItem('vishal_delivery_boys'));
+            deliveryBoys = deliveryBoys.filter(d => d.id !== id);
+            localStorage.setItem('vishal_delivery_boys', JSON.stringify(deliveryBoys));
+            loadAdminData();
+            showToast("Delivery partner removed.", "error");
+        }
+
+        function assignDeliveryBoy(orderId, boyName) {
+            let orders = JSON.parse(localStorage.getItem('vishal_orders'));
+            let o = orders.find(ord => ord.id === orderId);
+            if (o) {
+                o.deliveryBoy = boyName;
+                localStorage.setItem('vishal_orders', JSON.stringify(orders));
+                loadAdminData();
+                showToast(`Delivery assigned to: ${boyName}`);
+            }
+        }
+
+        function updateStock(id, newStock) {
+            let products = JSON.parse(localStorage.getItem('vishal_products'));
+            let p = products.find(prod => prod.id === id);
+            if (p) {
+                p.stock = parseInt(newStock) || 0;
+                localStorage.setItem('vishal_products', JSON.stringify(products));
+                renderProducts();
+                showToast("Stock updated successfully.");
+            }
+        }
+
+        function deleteProduct(id) {
+            let products = JSON.parse(localStorage.getItem('vishal_products'));
+            products = products.filter(p => p.id !== id);
+            localStorage.setItem('vishal_products', JSON.stringify(products));
+            loadAdminData();
+            renderProducts();
+            showToast("Product deleted.", "error");
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            let orders = JSON.parse(localStorage.getItem('vishal_orders'));
+            let o = orders.find(ord => ord.id === orderId);
+            if (o) {
+                o.status = newStatus;
+                localStorage.setItem('vishal_orders', JSON.stringify(orders));
+                loadAdminData();
+                showToast(`Order status updated to: ${newStatus}`);
+            }
+        }
+
+        function cancelOrder(orderId) {
+            let orders = JSON.parse(localStorage.getItem('vishal_orders'));
+            let o = orders.find(ord => ord.id === orderId);
+            if (o && o.status !== 'Cancelled') {
+                o.status = 'Cancelled';
+                
+                let products = JSON.parse(localStorage.getItem('vishal_products'));
+                o.items.forEach(item => {
+                    let prod = products.find(p => p.id === item.id);
+                    if (prod) prod.stock += item.qty;
+                });
+                localStorage.setItem('vishal_products', JSON.stringify(products));
+                localStorage.setItem('vishal_orders', JSON.stringify(orders));
+
+                loadAdminData();
+                renderProducts();
+                showToast(`Order ${orderId} has been cancelled & stock restored.`, "error");
+            }
+        }
+
+        function deleteOrderRecord(orderId) {
+            let orders = JSON.parse(localStorage.getItem('vishal_orders'));
+            orders = orders.filter(ord => ord.id !== orderId);
+            localStorage.setItem('vishal_orders', JSON.stringify(orders));
+            loadAdminData();
+            showToast("Order record deleted from history.", "error");
+        }
+
+        renderProducts();
+    </script>
+</body>
+</html>

@@ -1,44 +1,32 @@
-# 🏥 Hospital Management System (HMS)
+# 🛒 Vishal Mart & Web Projects
 
-A robust and modular **Java Maven project** designed to automate and streamline core hospital operations including patient admissions, doctor allocations, appointment scheduling, and billing management.
 
----
-
-## 🚀 Key Features
-
-* **Patient Management:** Register, update, and search patient details and medical history.
-* **Doctor Management:** Track doctor availability, specialization, and department assignments.
-* **Appointment Scheduling:** Book, reschedule, and cancel patient appointments with doctors.
-* **Billing System:** Generate invoices for consultations, treatments, and hospital stays.
-* **Role-Based Access:** Standard admin/receptionist workflow for data security.
+Welcome to my repository! This project contains the source code for **Vishal Mart Web Application**, interactive web pages, and Java Object-Oriented Programming (OOPs) concepts.
 
 ---
 
-## 🛠️ Tech Stack & Dependencies
+## 📌 Project Overview
 
-* **Language:** Java (JDK 17+)
-* **Build Tool:** Apache Maven
-* **Database:** MySQL
-* **Database Driver:** MySQL Connector/J (`mysql-connector-j`)
-* **Logging/Testing:** JUnit 5, SLF4J
+- **Vishal Mart Application:** Web interface designed for modern e-commerce user interaction.
+- **Java OOPs Logic:** Java code (`Flipkartoops.java`) demonstrating core programming logic and object-oriented structure.
+- **Personal Web Pages:** Custom interactive web page and portfolio layout (`index.html`).
 
 ---
-
-## 📁 Project Structure
+git clone [https://github.com/visha-cpu/my_project.git](https://github.com/visha-cpu/my_project.git)
+## 📁 Repository Structure
 
 ```text
-hospital-management-system/
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── com/hospital/
-│   │   │       ├── model/         # Patient, Doctor, Appointment entities
-│   │   │       ├── dao/           # Database Access Layer (JDBC)
-│   │   │       ├── service/       # Business logic layer
-│   │   │       └── Main.java      # Application Entry Point
-│   │   └── resources/
-│   │       ├── db.properties      # Database connection configuration
-│   │       └── schema.sql         # Database tables script
-│   └── test/                      # Unit tests
-├── pom.xml                        # Maven configuration & dependencies
-└── README.md
+├── my_project/         # Core application directory & assets
+├── Flipkartoops.java   # Java source file covering e-commerce/OOPs logic
+├── index.html          # Web portfolio / Resume interface
+├── index1.html         # Vishal Mart Web Application main page
+└── README.md           # Project documentation
+
+
+
+## 🚀 Tech Stack
+* HTML5
+* Java
+
+<h2>## ✍️ Author</h2>
+* **Vishal Maurya** ([visha-cpu](https://github.com/visha-cpu))

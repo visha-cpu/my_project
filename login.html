@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Vishal Maurya Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+
+    <div class="login-card">
+        <h2>Welcome Back</h2>
+        <p class="login-subtitle">Please login to access the website</p>
+        
+        <!-- Professional Custom Message Alert Box -->
+        <div id="alertBox" class="alert-box"></div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Enter username" required>
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="submit-btn">Login Now</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            var user = document.getElementById("username").value;
+            var pass = document.getElementById("password").value;
+            var alertBox = document.getElementById("alertBox");
+
+            if (user === "vishal" && pass === "4666") {
+                alertBox.className = "alert-box alert-success";
+                alertBox.innerText = "✓ Login Successful! Redirecting...";
+                alertBox.style.display = "block";
+
+                setTimeout(function() {
+                    window.location.href = "index.html";
+                }, 1500);
+            } else {
+                alertBox.className = "alert-box alert-error";
+                alertBox.innerText = "✕ Invalid Username or Password!";
+                alertBox.style.display = "block";
+            }
+        });
+    </script>
+
+</body>
+</html>
