@@ -45,4 +45,16 @@ git clone [https://github.com/visha-cpu/my_project.git](https://github.com/visha
 |  |
 | ------- |
 | [0003-longest-substring-without-repeating-characters](https://github.com/visha-cpu/my_project/tree/master/0003-longest-substring-without-repeating-characters) |
+## Array
+|  |
+| ------- |
+| [0004-median-of-two-sorted-arrays](https://github.com/visha-cpu/my_project/tree/master/0004-median-of-two-sorted-arrays) |
+## Binary Search
+|  |
+| ------- |
+| [0004-median-of-two-sorted-arrays](https://github.com/visha-cpu/my_project/tree/master/0004-median-of-two-sorted-arrays) |
+## Divide and Conquer
+|  |
+| ------- |
+| [0004-median-of-two-sorted-arrays](https://github.com/visha-cpu/my_project/tree/master/0004-median-of-two-sorted-arrays) |
 <!---LeetCode Topics End-->
