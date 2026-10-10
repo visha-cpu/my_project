@@ -70,4 +70,8 @@ git clone [https://github.com/visha-cpu/my_project.git](https://github.com/visha
 |  |
 | ------- |
 | [0005-longest-palindromic-substring](https://github.com/visha-cpu/my_project/tree/master/0005-longest-palindromic-substring) |
+## Math
+|  |
+| ------- |
+| [0007-reverse-integer](https://github.com/visha-cpu/my_project/tree/master/0007-reverse-integer) |
 <!---LeetCode Topics End-->
