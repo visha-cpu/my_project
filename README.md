@@ -50,6 +50,7 @@ git clone [https://github.com/visha-cpu/my_project.git](https://github.com/visha
 |  |
 | ------- |
 | [0004-median-of-two-sorted-arrays](https://github.com/visha-cpu/my_project/tree/master/0004-median-of-two-sorted-arrays) |
+| [0018-4sum](https://github.com/visha-cpu/my_project/tree/master/0018-4sum) |
 ## Binary Search
 |  |
 | ------- |
@@ -62,6 +63,7 @@ git clone [https://github.com/visha-cpu/my_project.git](https://github.com/visha
 |  |
 | ------- |
 | [0005-longest-palindromic-substring](https://github.com/visha-cpu/my_project/tree/master/0005-longest-palindromic-substring) |
+| [0018-4sum](https://github.com/visha-cpu/my_project/tree/master/0018-4sum) |
 ## Dynamic Programming
 |  |
 | ------- |
@@ -75,4 +77,8 @@ git clone [https://github.com/visha-cpu/my_project.git](https://github.com/visha
 | ------- |
 | [0007-reverse-integer](https://github.com/visha-cpu/my_project/tree/master/0007-reverse-integer) |
 | [0009-palindrome-number](https://github.com/visha-cpu/my_project/tree/master/0009-palindrome-number) |
+## Sorting
+|  |
+| ------- |
+| [0018-4sum](https://github.com/visha-cpu/my_project/tree/master/0018-4sum) |
 <!---LeetCode Topics End-->
